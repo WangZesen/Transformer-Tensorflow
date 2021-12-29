@@ -1,0 +1,11 @@
+train_data: 
+  size: 100000
+  dir: data/train_data.txt
+
+test_data:
+  size: 10000
+  dir: data/test_data.txt
+
+train_split: 0.9
+buffer_size: 40000
+random_seed: 810975
