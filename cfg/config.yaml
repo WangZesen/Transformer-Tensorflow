@@ -2,4 +2,5 @@ defaults:
   - data: default
   - train: default
   - model: default
+  - eval: default
   - _self_

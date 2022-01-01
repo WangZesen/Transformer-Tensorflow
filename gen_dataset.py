@@ -61,7 +61,7 @@ def random_question():
 			question += f'{_convert_int_to_str(wrong_ans)}'
 			answer = f'Wrong. It"s {_convert_int_to_text(total)}'
 	else:
-		question = f'{_convert_int_to_str(total)} substract {_convert_int_to_str(x)} equals '
+		question = f'{_convert_int_to_str(total)} subtract {_convert_int_to_str(x)} equals '
 		if random.random() < 0.5:
 			question += f'{_convert_int_to_str(y)}'
 			answer = f'Correct. It"s {_convert_int_to_text(y)}'

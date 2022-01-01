@@ -86,7 +86,7 @@ def get_dataset(cfg):
     valid_ds = _get_tf_dataset(raw_data[round(len(raw_data) * cfg.data.train_split):])
 
     raw_data = get_raw_data(data_dirs[1])
-    test_ds = _get_tf_dataset(raw_data, 1)
+    test_ds = _get_tf_dataset(raw_data, cfg.eval.eval_batch_size)
 
     info = {
         'inp_vocab_size': len(inp_vocab),
