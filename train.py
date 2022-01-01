@@ -49,17 +49,20 @@ def app(cfg):
 
         enc_padding_mask, combined_mask, dec_padding_mask = create_masks(inp_len, tar_len - 1, tar_inp)
 
-        predictions, _ = transformer(inp, tar_inp, 
-                False, 
-                enc_padding_mask, 
-                combined_mask, 
-                dec_padding_mask)
+        predictions, _ = transformer(
+                inp,
+                tar_inp,
+                False,
+                enc_padding_mask,
+                combined_mask,
+                dec_padding_mask
+        )
         loss = loss_function(tar_real, predictions)
 
         valid_loss(loss)
         valid_accuracy(tar_real, predictions)
 
-    train_ds, valid_ds, test_ds, info = get_dataset(cfg)
+    train_ds, valid_ds, _, info = get_dataset(cfg)
 
     loss_object = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True, reduction='none')
     train_loss = tf.keras.metrics.Mean(name='train_loss')

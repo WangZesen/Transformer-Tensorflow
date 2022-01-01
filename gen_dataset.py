@@ -28,9 +28,11 @@ def _convert_int_to_text(n: int):
 	ret = ONES_DIGIT[n // 100] + ' hundred'
 	if n % 100:
 		n = n % 100
-		if n <= 10:
-			ret += ' and ' + ONES_DIGIT[n % 10]
-		if n < 20:
+		if n == 0:
+			pass
+		elif n <= 10:
+			ret += ' and ' + ONES_DIGIT[n]
+		elif n < 20:
 			ret += ' and ' + TEN_DIGIT[n % 10]
 		else:
 			ret += ' and ' + TENS_DIGIT[n // 10]

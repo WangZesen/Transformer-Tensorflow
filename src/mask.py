@@ -17,7 +17,7 @@ def positional_encoding(position, d_model):
     return tf.cast(pos_encoding, dtype=tf.float32)
 
 def create_padding_mask(seq_len):
-    mask = tf.sequence_mask(seq_len, dtype=tf.float32)
+    mask = 1 - tf.sequence_mask(seq_len, dtype=tf.float32)
     return mask[:, tf.newaxis, tf.newaxis, :]
 
 def create_look_ahead_mask(max_seq_len):

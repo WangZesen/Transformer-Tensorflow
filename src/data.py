@@ -5,7 +5,7 @@ from hydra.utils import to_absolute_path
 
 TOKEN_SOS = 'SOS'
 TOKEN_EOS = 'EOS'
-
+TOKEN_PAD = 'PAD'
 
 def get_vocab(data_dirs):
     all_words_question = []
@@ -21,10 +21,10 @@ def get_vocab(data_dirs):
                 answer = line.strip('\n').split('\t')[1].split(' ')
                 all_words_answer.extend(answer)
                 max_pe_question = max(max_pe_question, len(question))
-                max_pe_answer = max(max_pe_answer, len(answer) + 2) # Add EOS and SOS
+                max_pe_answer = max(max_pe_answer, len(answer) + 2) # Include EOS and SOS
                 line = f.readline()
-    question_vocab = list(set(all_words_question))
-    answer_vocab = list(set(all_words_answer))
+    question_vocab = [TOKEN_PAD] + sorted(list(set(all_words_question)))
+    answer_vocab = [TOKEN_PAD] + sorted(list(set(all_words_answer)))
     answer_vocab.extend([TOKEN_SOS, TOKEN_EOS])
     return question_vocab, answer_vocab, max_pe_question, max_pe_answer
 
@@ -72,12 +72,12 @@ def get_dataset(cfg):
             'tar_len': out_len,
         }
     
-    def _get_tf_dataset(raw_data):
+    def _get_tf_dataset(raw_data, batch_size=None):
         return tf.data.Dataset.from_tensor_slices(raw_data[:round(len(raw_data) * cfg.data.train_split)]) \
             .map(_parse_fn) \
             .cache() \
             .shuffle(cfg.data.buffer_size, seed=cfg.data.random_seed, reshuffle_each_iteration=True) \
-            .padded_batch(cfg.train.batch_size)
+            .padded_batch(batch_size if batch_size else cfg.train.batch_size)
 
     raw_data = get_raw_data(data_dirs[0])
     random.seed(cfg.data.random_seed)
@@ -86,7 +86,7 @@ def get_dataset(cfg):
     valid_ds = _get_tf_dataset(raw_data[round(len(raw_data) * cfg.data.train_split):])
 
     raw_data = get_raw_data(data_dirs[1])
-    test_ds = _get_tf_dataset(raw_data)
+    test_ds = _get_tf_dataset(raw_data, 1)
 
     info = {
         'inp_vocab_size': len(inp_vocab),
